@@ -1,10 +1,9 @@
 from flask import Flask
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder="../frontend")  # 👈 point to frontend
 
-    # import blueprints
-    from app.routes import main
+    from .routes import main
     app.register_blueprint(main)
 
     return app
