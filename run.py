@@ -1,6 +1,5 @@
 from app import create_app
 
 app = create_app()
-
-if __name__ == "__main__":
-    app.run(debug=True)
+# Remove or ignore app.run() in production
+# Render will use gunicorn to start the app
