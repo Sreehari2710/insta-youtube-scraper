@@ -31,8 +31,8 @@ YOUTUBE_VIDEO_API = "https://www.googleapis.com/youtube/v3/videos"
 YOUTUBE_CHANNEL_API = "https://www.googleapis.com/youtube/v3/channels"
 
 def fetch_youtube_data(video_link):
-    # Extract video ID
-    match = re.search(r"(?:v=|youtu\.be/)([A-Za-z0-9_-]{11})", video_link)
+    # Extract video ID (supports normal, youtu.be, and shorts links)
+    match = re.search(r"(?:v=|youtu\.be/|shorts/)([A-Za-z0-9_-]{11})", video_link)
     if not match:
         return {"ReelLink": video_link, "Error": "Invalid YouTube link"}
     video_id = match.group(1)
@@ -75,6 +75,7 @@ def fetch_youtube_data(video_link):
         "Views": stats.get("viewCount", "N/A"),
         "Shares": "N/A"
     }
+
 
 # --- Unified Handler ---
 def fetch_reel_data(link):
