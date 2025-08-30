@@ -4,11 +4,25 @@ import instaloader
 import re
 import requests
 
+# Load environment variables
 load_dotenv()
 
 # --- Instagram ---
+INSTAGRAM_SESSIONID = os.getenv("INSTAGRAM_SESSIONID")
+
 def fetch_instagram_data(reel_link):
     loader = instaloader.Instaloader()
+
+    # 🔑 Load Instagram session if available
+    if INSTAGRAM_SESSIONID:
+        try:
+            # Create a context and set the sessionid
+            loader.context._session.cookies.set("sessionid", INSTAGRAM_SESSIONID)
+            print("✅ Logged in with Instagram session ID")
+        except Exception as e:
+            print(f"⚠️ Failed to use session ID: {e}")
+
+    # Extract shortcode from reel link
     shortcode = reel_link.split("/")[-2]
     post = instaloader.Post.from_shortcode(loader.context, shortcode)
     profile = post.owner_profile
@@ -26,7 +40,7 @@ def fetch_instagram_data(reel_link):
     }
 
 # --- YouTube ---
-YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")  
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 YOUTUBE_VIDEO_API = "https://www.googleapis.com/youtube/v3/videos"
 YOUTUBE_CHANNEL_API = "https://www.googleapis.com/youtube/v3/channels"
 
@@ -75,7 +89,6 @@ def fetch_youtube_data(video_link):
         "Views": stats.get("viewCount", "N/A"),
         "Shares": "N/A"
     }
-
 
 # --- Unified Handler ---
 def fetch_reel_data(link):
